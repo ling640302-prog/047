@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>設計師名片 | Minimalist Black & Green</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#00FF66', // 標誌性高對比螢光綠
+              hover: '#1aff75',
+              dim: '#00471c',
+              darkText: '#006629',
+              glow: 'rgba(0, 255, 102, 0.25)'
+            },
+            surface: {
+              base: '#0A0D0B',
+              card: '#111513',
+              border: '#1F2923',
+              hoverBorder: '#00FF66'
+            },
+            lightSurface: {
+              base: '#F4F7F5',
+              card: '#FFFFFF',
+              border: '#E1E9E3',
+              hoverBorder: '#00B84A'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          boxShadow: {
+            'neon': '0 0 30px rgba(0, 255, 102, 0.18)',
+            'neon-lg': '0 0 45px rgba(0, 255, 102, 0.3)',
+            'light-card': '0 20px 40px -15px rgba(0, 40, 15, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* 點陣背景質地 - 暗黑模式 */
+    .bg-grid-pattern {
+      background-size: 32px 32px;
+      background-image: 
+        radial-gradient(circle, rgba(0, 255, 102, 0.08) 1px, transparent 1px);
+    }
+    
+    /* 點陣背景質地 - 明亮模式 */
+    html:not(.dark) .bg-grid-pattern {
+      background-image: 
+        radial-gradient(circle, rgba(0, 150, 60, 0.12) 1px, transparent 1px);
+    }
+    
+    /* 隱藏原生選取高亮，改用黑綠客製 */
+    ::selection {
+      background-color: #00FF66;
+      color: #0A0D0B;
+    }
+
+    /* 卡片懸停立體懸浮與彈性緩動效果 */
+    .card-hover-effect {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                  box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  border-color 0.3s ease,
+                  background-color 0.3s ease;
+      will-change: transform, box-shadow;
+    }
+
+    .card-hover-effect:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85),
+                  0 0 35px -5px rgba(0, 255, 102, 0.2);
+    }
+
+    /* 明亮模式下的卡片懸停陰影 */
+    html:not(.dark) .card-hover-effect:hover {
+      box-shadow: 0 25px 45px -12px rgba(0, 45, 20, 0.16),
+                  0 0 25px -4px rgba(0, 200, 80, 0.2);
+    }
+  </style>
+</head>
+
+<body class="bg-surface-base dark:bg-surface-base bg-grid-pattern text-neutral-800 dark:text-neutral-200 min-h-screen flex items-center justify-center p-4 sm:p-6 font-sans relative overflow-x-hidden selection:bg-brand selection:text-black transition-colors duration-300">
+
+  <!-- 背景流光點綴 -->
+  <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-brand/10 dark:bg-brand/10 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- 日夜模式切換按鈕 (固定右上角) -->
+  <aside class="fixed top-5 right-5 z-50">
+    <button 
+      id="themeToggleBtn"
+      type="button"
+      title="切換日夜模式"
+      aria-label="Toggle Dark/Light Mode"
+      class="group flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/90 dark:bg-surface-card/90 backdrop-blur-md border border-lightSurface-border dark:border-surface-border hover:border-brand dark:hover:border-brand text-neutral-700 dark:text-neutral-200 shadow-md hover:shadow-neon transition-all duration-200 active:scale-95 cursor-pointer text-xs font-mono font-medium"
+    >
+      <!-- 太陽圖示 (深色模式下顯示) -->
+      <svg id="sunIcon" class="w-4 h-4 text-brand hidden dark:block transition-transform duration-300 group-hover:rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+      <!-- 月亮圖示 (淺色模式下顯示) -->
+      <svg id="moonIcon" class="w-4 h-4 text-emerald-600 block dark:hidden transition-transform duration-300 group-hover:-rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+      </svg>
+      <span id="themeLabel">LIGHT</span>
+    </button>
+  </aside>
+
+  <!-- 名片主卡片 -->
+  <main id="card" class="card-hover-effect relative w-full max-w-sm sm:max-w-md bg-lightSurface-card dark:bg-surface-card border border-lightSurface-border dark:border-surface-border hover:border-brand/50 dark:hover:border-brand/40 rounded-3xl p-7 sm:p-9 shadow-light-card dark:shadow-2xl dark:shadow-black/80 flex flex-col items-center text-center backdrop-blur-xl group cursor-default transition-colors duration-300">
+    
+    <!-- 頂部工作狀態指示燈 -->
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-brand/10 border border-emerald-300 dark:border-brand/20 text-emerald-700 dark:text-brand text-xs font-mono tracking-wider mb-8">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 dark:bg-brand opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 dark:bg-brand"></span>
+      </span>
+      <span>AVAILABLE FOR PROJECTS</span>
+    </div>
+
+    <!-- 頭像佔位/相片區 -->
+    <div class="relative mb-6">
+      <!-- 螢光外光環 -->
+      <div class="absolute -inset-1 rounded-2xl bg-gradient-to-b from-brand/60 to-transparent opacity-30 dark:opacity-40 blur-md group-hover:opacity-80 transition duration-500"></div>
+      
+      <!-- 頭像框體 -->
+      <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border-2 border-brand/60 dark:border-brand/50 overflow-hidden flex items-center justify-center shadow-inner">
+        <!-- 可愛女生向量頭貼 SVG (高解析、無外連斷圖風險，融合極簡黑綠美學) -->
+        <svg viewBox="0 0 160 160" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="avatarBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#141E18" />
+              <stop offset="100%" stop-color="#0B110E" />
+            </linearGradient>
+            <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#3A2C2A" />
+              <stop offset="100%" stop-color="#231B19" />
+            </linearGradient>
+            <linearGradient id="clothGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1F2923" />
+              <stop offset="100%" stop-color="#0E1410" />
+            </linearGradient>
+            <filter id="softGlow">
+              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- 背景底色與微光 -->
+          <rect width="160" height="160" fill="url(#avatarBgGrad)"/>
+          <circle cx="80" cy="72" r="55" fill="#00FF66" opacity="0.15" filter="url(#softGlow)"/>
+
+          <!-- 後層長髮 -->
+          <path d="M42 66 C40 102 48 135 52 160 L108 160 C112 135 120 102 118 66 C116 28 44 28 42 66 Z" fill="url(#hairGrad)"/>
+
+          <!-- 俐落高領上衣 -->
+          <path d="M40 160 C40 135 56 124 70 120 L90 120 C104 124 120 135 120 160 Z" fill="url(#clothGrad)"/>
+          <!-- 衣服螢光邊飾 -->
+          <path d="M68 121 C76 125 84 125 92 121" stroke="#00FF66" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.8"/>
+
+          <!-- 頸部與陰影 -->
+          <path d="M72 102 L72 122 C76 124 84 124 88 122 L88 102 Z" fill="#FBDCD0"/>
+          <path d="M72 102 C78 108 82 108 88 102 L88 107 C82 112 78 112 72 107 Z" fill="#ECC4B4"/>
+
+          <!-- 臉龐輪廓 -->
+          <path d="M54 62 C54 94 66 112 80 112 C94 112 106 94 106 62 C106 38 54 38 54 62 Z" fill="#FFEAE0"/>
+
+          <!-- 雙頰腮紅與光暈點綴 -->
+          <ellipse cx="64" cy="85" rx="7.5" ry="4" fill="#FF7B93" opacity="0.45"/>
+          <ellipse cx="96" cy="85" rx="7.5" ry="4" fill="#FF7B93" opacity="0.45"/>
+          <line x1="62" y1="84" x2="66" y2="86" stroke="#FF5373" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+          <line x1="94" y1="84" x2="98" y2="86" stroke="#FF5373" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+
+          <!-- 耳朵 -->
+          <path d="M53 68 C50 68 49 76 53 80 Z" fill="#FFDDD0"/>
+          <path d="M107 68 C110 68 111 76 107 80 Z" fill="#FFDDD0"/>
+
+          <!-- 柔和眉毛 -->
+          <path d="M62 64 C66 61 72 62 74 65" stroke="#4A3B37" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          <path d="M98 64 C94 61 88 62 86 65" stroke="#4A3B37" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+
+          <!-- 大眼與靈動高光 (左眼) -->
+          <ellipse cx="68" cy="74" rx="5" ry="6.5" fill="#241B19"/>
+          <ellipse cx="67" cy="72" rx="2" ry="2.5" fill="#FFFFFF"/>
+          <circle cx="70" cy="77" r="1.1" fill="#FFFFFF"/>
+          <path d="M62 70 C65 67 71 67 74 70" stroke="#1F1715" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+
+          <!-- 大眼與靈動高光 (右眼) -->
+          <ellipse cx="92" cy="74" rx="5" ry="6.5" fill="#241B19"/>
+          <ellipse cx="91" cy="72" rx="2" ry="2.5" fill="#FFFFFF"/>
+          <circle cx="94" cy="77" r="1.1" fill="#FFFFFF"/>
+          <path d="M86 70 C89 67 95 67 98 70" stroke="#1F1715" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+
+          <!-- 小巧鼻尖與微笑嘴唇 -->
+          <circle cx="80" cy="80" r="1.1" fill="#E2A692"/>
+          <path d="M77 88 Q80 91.5 83 88" stroke="#D96378" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+
+          <!-- 空氣感瀏海與兩側鬢髮 -->
+          <path d="M50 60 C52 40 68 33 80 33 C92 33 108 40 110 60 C104 53 96 52 88 56 C82 59 78 59 72 55 C64 51 56 53 50 60 Z" fill="url(#hairGrad)"/>
+          <path d="M50 58 C51 72 52 88 56 98 C53 88 52 74 51 60 Z" fill="url(#hairGrad)"/>
+          <path d="M110 58 C109 72 108 88 104 98 C107 88 108 74 109 60 Z" fill="url(#hairGrad)"/>
+
+          <!-- 秀髮高光層次 -->
+          <path d="M64 43 C72 39 88 39 96 43" stroke="#5E4944" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+
+          <!-- 科技風星芒髮夾 (螢光綠主題色) -->
+          <polygon points="101,48 108,45 105,53 112,50" stroke="#00FF66" stroke-width="2" fill="none" stroke-linejoin="round" filter="url(#softGlow)"/>
+        </svg>
+        
+        <!-- 角落科技標線裝飾 -->
+        <span class="absolute top-1.5 left-1.5 w-2 h-2 border-t-2 border-l-2 border-brand pointer-events-none"></span>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 border-t-2 border-r-2 border-brand pointer-events-none"></span>
+        <span class="absolute bottom-1.5 left-1.5 w-2 h-2 border-b-2 border-l-2 border-brand pointer-events-none"></span>
+        <span class="absolute bottom-1.5 right-1.5 w-2 h-2 border-b-2 border-r-2 border-brand pointer-events-none"></span>
+      </div>
+    </div>
+
+    <!-- 姓名與職稱 -->
+    <div class="space-y-1.5 mb-5">
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white flex items-center justify-center gap-2 transition-colors">
+        林 思 綺
+        <span class="text-emerald-700 dark:text-brand font-mono text-xs font-normal border border-emerald-300 dark:border-brand/30 px-1.5 py-0.5 rounded">TW</span>
+      </h1>
+      <p class="text-sm sm:text-base font-mono text-emerald-700 dark:text-brand font-medium tracking-wide">
+        Senior Product Designer
+      </p>
+    </div>
+
+    <!-- 個人簡述 / 專長標籤 -->
+    <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6 max-w-xs transition-colors">
+      專注於現代數位介面系統、極簡視覺與高階互動架構，將複雜邏輯轉譯為純粹的美學體驗。
+    </p>
+
+    <!-- 技能標籤 -->
+    <div class="flex flex-wrap justify-center gap-2 mb-8">
+      <span class="px-2.5 py-1 text-xs font-mono rounded-md bg-neutral-100 dark:bg-neutral-900/90 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-800">UI / UX</span>
+      <span class="px-2.5 py-1 text-xs font-mono rounded-md bg-neutral-100 dark:bg-neutral-900/90 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-800">Design Systems</span>
+      <span class="px-2.5 py-1 text-xs font-mono rounded-md bg-neutral-100 dark:bg-neutral-900/90 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-800">Prototyping</span>
+    </div>
+
+    <!-- 主要行動按鈕 -->
+    <button 
+      id="contactBtn"
+      type="button"
+      class="w-full relative group/btn flex items-center justify-center gap-2 bg-brand text-black font-semibold text-sm sm:text-base py-3.5 px-6 rounded-xl hover:bg-brand-hover active:scale-[0.98] transition-all duration-200 shadow-neon hover:shadow-neon-lg cursor-pointer"
+    >
+      <svg class="w-4 h-4 transition-transform group-hover/btn:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+      <span id="btnText">聯絡我 · 複製信箱</span>
+    </button>
+
+    <!-- 社群極簡連結 -->
+    <div class="mt-7 flex items-center justify-center gap-5 text-neutral-400 dark:text-neutral-500">
+      <!-- GitHub -->
+      <a href="#" class="hover:text-emerald-600 dark:hover:text-brand transition-colors p-1" title="GitHub" aria-label="GitHub">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      </a>
+      <!-- Dribbble / Portfolio -->
+      <a href="#" class="hover:text-emerald-600 dark:hover:text-brand transition-colors p-1" title="Works" aria-label="Portfolio">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm9.76 10.45a10.02 10.02 0 01-4.8 5.76 17.5 17.5 0 00-2.35-4.47c2.6-.96 5.25-1.29 7.15-1.29zm-9.35-8.4a10.03 10.03 0 017.5 3.63c-1.8.2-4.14.7-6.52 1.62A34.46 34.46 0 0010.41 2.05zm-2.07.6c.35 1.5.85 3.25 1.48 5.09-3.23 1.05-6.57 1.59-7.55 1.62A10.04 10.04 0 0110.34 2.65zm-8.3 8.78c.84-.03 3.86-.49 6.88-1.5 1.15 2.1 2.12 4.14 2.85 6.02-3.32 1.06-6.19.98-7.05.93a9.98 9.98 0 01-2.68-5.45zm5.55 8.9c.77.04 3.09.09 5.94-.8 1.12 2.8 1.94 5.38 2.37 7.02a10.08 10.08 0 01-8.31-6.22zm10.23 1.83a29.8 29.8 0 01-2.22-6.53c1.78-.5 3.67-.78 5.61-.78.1 0 .2.01.3.01a10.06 10.06 0 01-3.69 7.3z"/></svg>
+      </a>
+      <!-- LinkedIn -->
+      <a href="#" class="hover:text-emerald-600 dark:hover:text-brand transition-colors p-1" title="LinkedIn" aria-label="LinkedIn">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- 提示氣泡 (代替 alert) -->
+  <div 
+    id="toast" 
+    class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-surface-card border border-brand text-brand px-4 py-2.5 rounded-xl text-xs font-mono opacity-0 pointer-events-none transition-all duration-300 shadow-neon flex items-center gap-2 transform translate-y-2 z-50"
+    role="status"
+    aria-live="polite"
+  >
+    <svg class="w-4 h-4 text-brand shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+    <span id="toastMsg">電子郵件已複製到剪貼簿！</span>
+  </div>
+
+  <!-- 互動邏輯腳本 -->
+  <script>
+    (function initCardInteractions() {
+      const email = "ssuchi.lin.design@example.com";
+      const contactBtn = document.getElementById("contactBtn");
+      const btnText = document.getElementById("btnText");
+      const toast = document.getElementById("toast");
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      const themeLabel = document.getElementById("themeLabel");
+      const htmlEl = document.documentElement;
+      let toastTimeout = null;
+
+      // 日夜模式初始設定（預設為深色 Dark Mode）
+      const savedTheme = localStorage.getItem("preferred-theme") || "dark";
+      if (savedTheme === "dark") {
+        htmlEl.classList.add("dark");
+        if (themeLabel) themeLabel.textContent = "LIGHT";
+      } else {
+        htmlEl.classList.remove("dark");
+        if (themeLabel) themeLabel.textContent = "DARK";
+      }
+
+      // 切換日夜模式按鈕
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+          const isDark = htmlEl.classList.toggle("dark");
+          localStorage.setItem("preferred-theme", isDark ? "dark" : "light");
+          if (themeLabel) {
+            themeLabel.textContent = isDark ? "LIGHT" : "DARK";
+          }
+        });
+      }
+
+      // 複製文字功能 (相容 iframe 安全限制)
+      function copyToClipboard(text) {
+        const tempInput = document.createElement("textarea");
+        tempInput.value = text;
+        tempInput.style.position = "fixed";
+        tempInput.style.opacity = "0";
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        
+        let success = false;
+        try {
+          success = document.execCommand("copy");
+        } catch (err) {
+          success = false;
+        }
+        document.body.removeChild(tempInput);
+        return success;
+      }
+
+      // 顯示反饋提示
+      function showToast(message) {
+        const toastMsg = document.getElementById("toastMsg");
+        toastMsg.textContent = message;
+
+        toast.classList.remove("opacity-0", "translate-y-2", "pointer-events-none");
+        toast.classList.add("opacity-100", "translate-y-0");
+
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove("opacity-100", "translate-y-0");
+          toast.classList.add("opacity-0", "translate-y-2", "pointer-events-none");
+        }, 2600);
+      }
+
+      // 按鈕點擊事件
+      contactBtn.addEventListener("click", () => {
+        const copied = copyToClipboard(email);
+        
+        // 按鈕文字微反饋
+        const originalText = btnText.textContent;
+        btnText.textContent = "已複製！";
+        contactBtn.classList.add("bg-white", "text-black");
+
+        setTimeout(() => {
+          btnText.textContent = originalText;
+          contactBtn.classList.remove("bg-white", "text-black");
+        }, 1800);
+
+        if (copied) {
+          showToast(`信箱已複製：${email}`);
+        } else {
+          showToast(`請聯絡：${email}`);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
